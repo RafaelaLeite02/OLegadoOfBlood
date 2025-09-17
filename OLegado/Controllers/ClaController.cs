@@ -26,7 +26,7 @@ namespace OLegado.Controllers
                     .Select(c => new ClaDTO
                     {
                         Id = c.Id,
-                        Name = c.Name,
+                        Name = c.Nome,
                     })
                     .ToListAsync();
             }
@@ -44,7 +44,7 @@ namespace OLegado.Controllers
                 var claDTO = new ClaDTO
                 {
                     Id = cla.Id,
-                    Name = cla.Name,
+                    Name = cla.Nome,
                 };
 
                 return claDTO;

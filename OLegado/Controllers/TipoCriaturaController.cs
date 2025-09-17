@@ -26,7 +26,7 @@ namespace OLegado.Controllers
                 .Select(c => new TipoCriaturaDTO
                 {
                     Id = c.Id,
-                    Name = c.Name,
+                    Nome = c.Nome,
                 })
                 .ToListAsync();
         }
@@ -44,7 +44,7 @@ namespace OLegado.Controllers
             var tipoCriaturaDTO = new TipoCriaturaDTO
             {
                 Id = tipoCriatura.Id,
-                Name = tipoCriatura.Name,
+                Nome = tipoCriatura.Nome,
             };
 
             return tipoCriaturaDTO;

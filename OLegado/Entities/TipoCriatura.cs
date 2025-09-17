@@ -10,7 +10,7 @@ namespace OLegado.Entities
     public class TipoCriatura
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Nome { get; set; } = string.Empty;
 
         public ICollection<Personagem> Personagens { get; set; }
     }

@@ -9,9 +9,9 @@ namespace OLegado.Entities
     public class Cla
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Nome { get; set; } = string.Empty;
 
-        public ICollection<Personagem> Personagens { get; set; }
+        public ICollection<Personagem> Personagens { get; set; }    
     }
 }
 
