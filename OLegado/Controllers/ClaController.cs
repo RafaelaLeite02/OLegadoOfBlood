@@ -6,8 +6,8 @@ using OLegado.Entities;
 
 namespace OLegado.Controllers
 {
-    public class ClaController : Controller
-    {
+ 
+    
         [Route("api/[controller]")]
         [ApiController]
         public class ClasController : ControllerBase
@@ -79,5 +79,5 @@ namespace OLegado.Controllers
                 return _context.Clas.Any(e => e.Id == id);
             }
         }
-    }
+    
 }

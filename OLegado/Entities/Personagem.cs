@@ -22,16 +22,5 @@ namespace OLegado.Entities
 
         public int TipoCriaturaId { get; set; }
         public TipoCriatura Criatura { get; set; }
-
-
-        public Personagem(string name, string fotoURL, int idade, string poder, string descricao, int claId)
-        {
-            Name = name;
-            FotoURL = fotoURL;
-            Idade = idade;
-            Poder = poder;
-            Descricao = descricao;
-            ClaId = claId;
-        }
     }
 }
