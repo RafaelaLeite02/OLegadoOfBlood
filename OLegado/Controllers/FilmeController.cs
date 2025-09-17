@@ -2,9 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using OLegado.Data;
 using OLegado.DTOs;
-using OLegado.DTOs;
 using OLegado.Entities;
-using OLegado.Data;
 
 namespace OLegado.Controllers
 {
