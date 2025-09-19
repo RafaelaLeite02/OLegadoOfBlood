@@ -12,6 +12,9 @@ namespace OLegado.DTOs
         public string Descricao { get; set; } = string.Empty;
 
         public int ClaId { get; set; }
+        public virtual Cla Cla { get; set; }
+
         public int TipoCriaturaId { get; set; }
+        public virtual TipoCriatura TipoCriatura { get; set; }
     }
 }

@@ -17,10 +17,10 @@ namespace OLegado.Entities
 
 
         public int ClaId { get; set; }
-        public Cla Nome { get; set; }    
+      
 
-
+ 
         public int TipoCriaturaId { get; set; }
-        public TipoCriatura Criatura { get; set; }
+       
     }
 }

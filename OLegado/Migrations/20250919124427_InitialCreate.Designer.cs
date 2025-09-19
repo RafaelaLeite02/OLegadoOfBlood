@@ -11,7 +11,7 @@ using OLegado.Data;
 namespace OLegado.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250916173706_InitialCreate")]
+    [Migration("20250919124427_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -176,7 +176,7 @@ namespace OLegado.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -194,21 +194,17 @@ namespace OLegado.Migrations
 
             modelBuilder.Entity("OLegado.Entities.Personagem", b =>
                 {
-                    b.HasOne("OLegado.Entities.Cla", "NomeCla")
+                    b.HasOne("OLegado.Entities.Cla", null)
                         .WithMany("Personagens")
                         .HasForeignKey("ClaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OLegado.Entities.TipoCriatura", "Criatura")
+                    b.HasOne("OLegado.Entities.TipoCriatura", null)
                         .WithMany("Personagens")
                         .HasForeignKey("TipoCriaturaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Criatura");
-
-                    b.Navigation("NomeCla");
                 });
 
             modelBuilder.Entity("OLegado.Entities.PersonagemFilme", b =>

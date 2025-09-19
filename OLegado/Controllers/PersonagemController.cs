@@ -40,17 +40,18 @@ namespace OLegado.Controllers
             return Ok(personagemDTOs);
         }
 
-      
+
         [HttpPost]
-        public async Task<ActionResult<PersonagemDTO>> PostPersonagens(Personagem personagem)
+        public async Task<IActionResult> Post([FromBody] Personagem personagem)
         {
             _context.Personagens.Add(personagem);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPersonagens), new { id = personagem.Id }, personagem );
+            return CreatedAtAction(nameof(GetPersonagens), new { id = personagem.Id }, personagem);
         }
+                                                                                                                                                      
 
-      
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPersonagem(int id, Personagem personagem)
         {
