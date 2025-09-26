@@ -26,7 +26,7 @@ namespace OLegado.Controllers
                     .Select(c => new ClaDTO
                     {
                         Id = c.Id,
-                        Name = c.Name,
+                        Nome = c.Nome,
                     })
                     .ToListAsync();
             }
@@ -44,19 +44,21 @@ namespace OLegado.Controllers
                 var claDTO = new ClaDTO
                 {
                     Id = cla.Id,
-                    Name = cla.Name,
+                    Nome = cla.Nome,
                 };
 
                 return claDTO;
             }
 
             [HttpPost]
-            public async Task<ActionResult<ClaDTO>> PostCla(Cla cla)
+            public async Task<ActionResult<Cla>> PostCla(Cla cla)
             {
-                _context.Clas.Add(cla);
-                await _context.SaveChangesAsync();
+          
+              cla.Personagens = null;
+              _context.Clas.Add(cla);
+              await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(GetCla), new { id = cla.Id }, cla);
+              return CreatedAtAction(nameof(GetCla), new { id = cla.Id }, cla);
             }
 
             [HttpDelete("{id}")]

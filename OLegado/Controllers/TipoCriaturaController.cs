@@ -51,8 +51,10 @@ namespace OLegado.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TipoCriaturaDTO>> PostTipoCriatura(TipoCriatura tipoCriatura)
+        public async Task<ActionResult<TipoCriatura>> PostTipoCriatura(TipoCriatura tipoCriatura)
         {
+
+            tipoCriatura.Personagens = null;
             _context.TipoCriaturas.Add(tipoCriatura);
             await _context.SaveChangesAsync();
 

@@ -6,8 +6,8 @@ using OLegado.Entities;
 
 namespace OLegado.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class PersonagemController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -17,93 +17,100 @@ namespace OLegado.Controllers
             _context = context;
         }
 
-        
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<PersonagemDTO>>> GetPersonagens()
-        { 
-            var personagens = await _context.Personagens.ToListAsync();
-
-            var personagemDTOs = personagens.Select(p => new PersonagemDTO
-            {
-                Id = p.Id,
-                Name = p.Name,
-                FotoURL = p.FotoURL,
-                Idade = p.Idade,
-                Poder = p.Poder,
-                Descricao = p.Descricao,
-                ClaId = p.ClaId,
-                TipoCriaturaId = p.TipoCriaturaId,
-
-            }).ToList();
-
- 
-            return Ok(personagemDTOs);
-        }
-
-
+        // POST
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Personagem personagem)
+        public IActionResult CriarPersonagem([FromBody] PersonagemDTO dto)
         {
-            _context.Personagens.Add(personagem);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetPersonagens), new { id = personagem.Id }, personagem);
-        }
-                                                                                                                                                      
-
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPersonagem(int id, Personagem personagem)
-        {
-            if (id != personagem.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(personagem).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PersonagemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                var cla = _context.Clas.FirstOrDefault(c => c.Nome == dto.ClaNome);
+                if (cla == null)
+                    return BadRequest($"Clã '{dto.ClaNome}' não encontrado.");
 
-            return NoContent();
+                var tipoCriatura = _context.TipoCriaturas.FirstOrDefault(t => t.Nome == dto.TipoCriaturaNome);
+                if (tipoCriatura == null)
+                    return BadRequest($"Tipo de Criatura '{dto.TipoCriaturaNome}' não encontrado.");
+
+                var personagem = new Personagem
+                {
+                    Name = dto.Name,
+                    FotoURL = dto.FotoURL,
+                    Idade = dto.Idade,
+                    Poder = dto.Poder,
+                    Descricao = dto.Descricao,
+                    ClaId = cla.Id,
+                    TipoCriaturaId = tipoCriatura.Id
+                };
+
+                _context.Personagens.Add(personagem);
+                _context.SaveChanges();
+
+                return CreatedAtAction(nameof(GetById), new { id = personagem.Id }, personagem);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno: {ex.Message}");
+            }
         }
 
-        private bool PersonagemExists(int id)
+        
+        [HttpGet]
+        public IActionResult GetAll()
         {
-            throw new NotImplementedException();
+            var personagens = _context.Personagens
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    p.FotoURL,
+                    p.Idade,
+                    p.Poder,
+                    p.Descricao,
+                    Cla = p.Cla.Nome,
+                    TipoCriatura = p.TipoCriatura.Nome
+                })
+                .ToList();
+
+            return Ok(personagens);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePersonagem(int id)
+        
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
         {
-            var personagem = await _context.Personagens.FindAsync(id);
-            if (personagem  == null)
-            {
+            var personagem = _context.Personagens
+                .Where(p => p.Id == id)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Name,
+                    p.FotoURL,
+                    p.Idade,
+                    p.Poder,
+                    p.Descricao,
+                    Cla = p.Cla.Nome,
+                    TipoCriatura = p.TipoCriatura.Nome
+                })
+                .FirstOrDefault();
+
+            if (personagem == null)
                 return NotFound();
-            }
+
+            return Ok(personagem);
+        }
+
+        // DELETE
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var personagem = _context.Personagens.FirstOrDefault(p => p.Id == id);
+            if (personagem == null)
+                return NotFound($"Personagem com ID {id} não encontrado.");
 
             _context.Personagens.Remove(personagem);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
-            return NoContent();
-        }
-
-        private bool PersonagensExists(int id)
-        {
-            return _context.Filmes.Any(e => e.Id == id);
+            return NoContent(); 
         }
     }
 }

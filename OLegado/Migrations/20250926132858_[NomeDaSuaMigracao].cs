@@ -5,7 +5,7 @@
 namespace OLegado.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class NomeDaSuaMigracao : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,7 +16,7 @@ namespace OLegado.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,7 +76,7 @@ namespace OLegado.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FotoURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Idade = table.Column<int>(type: "int", nullable: false),
+                    Idade = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Poder = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descricao = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ClaId = table.Column<int>(type: "int", nullable: false),

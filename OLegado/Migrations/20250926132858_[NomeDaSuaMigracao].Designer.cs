@@ -11,8 +11,8 @@ using OLegado.Data;
 namespace OLegado.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250919124427_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250926132858_[NomeDaSuaMigracao]")]
+    partial class NomeDaSuaMigracao
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,7 +32,7 @@ namespace OLegado.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -99,8 +99,9 @@ namespace OLegado.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Idade")
-                        .HasColumnType("int");
+                    b.Property<string>("Idade")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -194,17 +195,21 @@ namespace OLegado.Migrations
 
             modelBuilder.Entity("OLegado.Entities.Personagem", b =>
                 {
-                    b.HasOne("OLegado.Entities.Cla", null)
-                        .WithMany("Personagens")
+                    b.HasOne("OLegado.Entities.Cla", "Cla")
+                        .WithMany()
                         .HasForeignKey("ClaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OLegado.Entities.TipoCriatura", null)
+                    b.HasOne("OLegado.Entities.TipoCriatura", "TipoCriatura")
                         .WithMany("Personagens")
                         .HasForeignKey("TipoCriaturaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Cla");
+
+                    b.Navigation("TipoCriatura");
                 });
 
             modelBuilder.Entity("OLegado.Entities.PersonagemFilme", b =>
@@ -243,11 +248,6 @@ namespace OLegado.Migrations
                     b.Navigation("PersonagemL");
 
                     b.Navigation("TituloL");
-                });
-
-            modelBuilder.Entity("OLegado.Entities.Cla", b =>
-                {
-                    b.Navigation("Personagens");
                 });
 
             modelBuilder.Entity("OLegado.Entities.Filme", b =>
