@@ -1,7 +1,9 @@
 using OLegado.Data;
 using Microsoft.EntityFrameworkCore;
 
+
 var builder = WebApplication.CreateBuilder(args);
+const string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 // Adicionar a configuração do DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -14,20 +16,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Cors
+// CORS
 builder.Services.AddCors(options =>
 {
-options.AddPolicy("AllowAll",
-    policy => policy
-        .AllowAnyOrigin()   // Permite qualquer origem
-        .AllowAnyMethod()   // Permite GET, POST, PUT, DELETE
-        .AllowAnyHeader() // Permite qualquer header
-    );
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          // Adapte a porta se o seu Vue não estiver em 8080
+                          policy.WithOrigins("http://localhost:5173")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Swagger só no dev
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -36,9 +40,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
-app.UseCors("AllowAll");
+app.UseCors(MyAllowSpecificOrigins);
+
+app.UseAuthorization();
 
 app.MapControllers();
 

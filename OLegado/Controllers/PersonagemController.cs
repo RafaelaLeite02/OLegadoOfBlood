@@ -58,6 +58,10 @@ namespace OLegado.Controllers
         public IActionResult GetAll()
         {
             var personagens = _context.Personagens
+
+                 .Include(p => p.Cla)
+                 .Include(p => p.TipoCriatura)
+
                 .Select(p => new
                 {
                     p.Id,
