@@ -18,7 +18,7 @@ namespace OLegado.Controllers
             _context = context;
         }
 
-        // POST
+ 
         [HttpPost]
         public IActionResult CriarPersonagem([FromBody] PersonagemDTO dto)
         {
@@ -50,6 +50,9 @@ namespace OLegado.Controllers
                     LivroId = dto.LivroId,
                     FilmeId = dto.FilmeId,
                     FonteMidia = dto.FonteMidia,
+                    Habilidades = dto.Habilidades,
+                    Personalidade = dto.Personalidade,
+                    NivelPoder = dto.NivelPoder
                 };
 
                 _context.Personagens.Add(personagem);
@@ -74,7 +77,7 @@ namespace OLegado.Controllers
                  .Include(p => p.Cla)
                  .Include(p => p.TipoCriatura);
 
-            if (!string.IsNullOrEmpty(filtro) && filtro.ToLower() != "todos")
+            if (filtro != null && filtro.ToLower() != "todos")
             {
                 query = query.Where(p => p.FonteMidia.ToLower() == filtro.ToLower());
             }
@@ -90,7 +93,10 @@ namespace OLegado.Controllers
                     p.Descricao,
                     Cla = p.Cla.Nome,
                     TipoCriatura = p.TipoCriatura.Nome,
-                    FonteMidia = p.FonteMidia
+                    p.FonteMidia,
+                    p.Habilidades,
+                    p.Personalidade,
+                    p.NivelPoder
                 })
                 .ToList();
 
@@ -113,7 +119,11 @@ namespace OLegado.Controllers
                     p.Descricao,
                     Cla = p.Cla.Nome,
                     TipoCriatura = p.TipoCriatura.Nome,
-                    FonteMidia = p.FonteMidia
+                    p.FonteMidia,
+                    p.Habilidades,
+                    p.Personalidade,
+                    p.NivelPoder
+
                 })
                 .FirstOrDefault();
 

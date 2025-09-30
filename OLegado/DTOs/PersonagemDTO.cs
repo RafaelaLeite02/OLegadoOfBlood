@@ -11,13 +11,16 @@ namespace OLegado.DTOs
         public string Poder { get; set; } = string.Empty;
         public string Descricao { get; set; } = string.Empty;
         public string FonteMidia { get; set; } = string.Empty;
+        public string Habilidades { get; set; }
+        public string Personalidade { get; set; }
+        public int? NivelPoder { get; set; }
 
         public int? LivroId { get; set; }
         public int? FilmeId { get; set; }
 
-        [Required]
+        
         public string ClaNome { get; set; }
-        [Required]
+      
         public string TipoCriaturaNome { get; set; }
     }
 }

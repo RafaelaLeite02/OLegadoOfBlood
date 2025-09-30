@@ -22,8 +22,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          // Adapte a porta se o seu Vue não estiver em 8080
-                          policy.WithOrigins("http://localhost:5173")
+                       
+                          policy.WithOrigins("http://localhost:5174",
+                                             "http://localhost:5173", 
+                                             "http://localhost:8080")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                       });
