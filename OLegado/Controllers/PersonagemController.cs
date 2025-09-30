@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OLegado.Data;
 using OLegado.DTOs;
 using OLegado.Entities;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace OLegado.Controllers
 {
@@ -21,6 +22,12 @@ namespace OLegado.Controllers
         [HttpPost]
         public IActionResult CriarPersonagem([FromBody] PersonagemDTO dto)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 var cla = _context.Clas.FirstOrDefault(c => c.Nome == dto.ClaNome);
@@ -39,7 +46,10 @@ namespace OLegado.Controllers
                     Poder = dto.Poder,
                     Descricao = dto.Descricao,
                     ClaId = cla.Id,
-                    TipoCriaturaId = tipoCriatura.Id
+                    TipoCriaturaId = tipoCriatura.Id,
+                    LivroId = dto.LivroId,
+                    FilmeId = dto.FilmeId,
+                    FonteMidia = dto.FonteMidia,
                 };
 
                 _context.Personagens.Add(personagem);
@@ -55,13 +65,21 @@ namespace OLegado.Controllers
 
         
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll([FromQuery] string filtro)
         {
-            var personagens = _context.Personagens
+            
+            var query = _context.Personagens.AsQueryable();
 
+            query = query
                  .Include(p => p.Cla)
-                 .Include(p => p.TipoCriatura)
+                 .Include(p => p.TipoCriatura);
 
+            if (!string.IsNullOrEmpty(filtro) && filtro.ToLower() != "todos")
+            {
+                query = query.Where(p => p.FonteMidia.ToLower() == filtro.ToLower());
+            }
+
+            var personagens = query
                 .Select(p => new
                 {
                     p.Id,
@@ -71,7 +89,8 @@ namespace OLegado.Controllers
                     p.Poder,
                     p.Descricao,
                     Cla = p.Cla.Nome,
-                    TipoCriatura = p.TipoCriatura.Nome
+                    TipoCriatura = p.TipoCriatura.Nome,
+                    FonteMidia = p.FonteMidia
                 })
                 .ToList();
 
@@ -93,7 +112,8 @@ namespace OLegado.Controllers
                     p.Poder,
                     p.Descricao,
                     Cla = p.Cla.Nome,
-                    TipoCriatura = p.TipoCriatura.Nome
+                    TipoCriatura = p.TipoCriatura.Nome,
+                    FonteMidia = p.FonteMidia
                 })
                 .FirstOrDefault();
 

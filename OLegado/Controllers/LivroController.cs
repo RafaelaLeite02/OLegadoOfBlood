@@ -17,35 +17,15 @@ namespace OLegado.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<LivroDTO>>> GetLivros()
+        [HttpGet("lista")]
+        public async Task<IActionResult> GetLista()
         {
-            return await _context.Livros
-                .Select(l => new LivroDTO
-                {
-                    Id = l.Id,
-                    Titulo = l.Titulo,
-                })
+            var livros = await _context.Livros
+
+                .Select(l => new { l.Id, Nome = l.Titulo })
                 .ToListAsync();
-        }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<LivroDTO>> GetLivro(int id)
-        {
-            var livro = await _context.Livros.FindAsync(id);
-
-            if (livro == null)
-            {
-                return NotFound();
-            }
-
-            var livroDTO = new LivroDTO
-            {
-                Id = livro.Id,
-                Titulo = livro.Titulo,
-            };
-
-            return livroDTO;
+            return Ok(livros);
         }
 
 

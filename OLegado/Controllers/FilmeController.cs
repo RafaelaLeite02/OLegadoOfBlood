@@ -17,35 +17,14 @@ namespace OLegado.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<FilmeDTO>>> GetFilmes()
+        [HttpGet("lista")]
+        public async Task<IActionResult> GetLista()
         {
-            return await _context.Filmes
-                .Select(f => new FilmeDTO
-                {
-                    Id = f.Id,
-                    Titulo = f.Titulo,
-                })
+            var filmes = await _context.Filmes
+                .Select(f => new { f.Id, Nome = f.Titulo })
                 .ToListAsync();
-        }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<FilmeDTO>> GetFilme(int id)
-        {
-            var filme = await _context.Filmes.FindAsync(id);
-
-            if (filme == null)
-            {
-                return NotFound();
-            }
-
-            var filmeDTO = new FilmeDTO
-            {
-                Id = filme.Id,
-                Titulo = filme.Titulo,
-            };
-
-            return filmeDTO;
+            return Ok(filmes);
         }
 
 
