@@ -10,7 +10,7 @@ namespace OLegado.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string FotoURL { get; set; } = string.Empty;
+        public string? FotoURL { get; set; } = string.Empty;
         public string Idade { get; set; }  
         public string Poder { get; set; } = string.Empty;
         public string Descricao { get; set; } = string.Empty;

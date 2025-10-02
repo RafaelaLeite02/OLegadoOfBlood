@@ -18,7 +18,7 @@ namespace OLegado.Controllers
             _context = context;
         }
 
- 
+
         [HttpPost]
         public IActionResult CriarPersonagem([FromBody] PersonagemDTO dto)
         {
@@ -41,7 +41,7 @@ namespace OLegado.Controllers
                 var personagem = new Personagem
                 {
                     Name = dto.Name,
-                    FotoURL = dto.FotoURL,
+                    FotoURL = dto.ImagemBase64,
                     Idade = dto.Idade,
                     Poder = dto.Poder,
                     Descricao = dto.Descricao,
@@ -66,7 +66,9 @@ namespace OLegado.Controllers
             }
         }
 
-        
+
+
+
         [HttpGet]
         public IActionResult GetAll([FromQuery] string filtro)
         {
@@ -77,9 +79,23 @@ namespace OLegado.Controllers
                  .Include(p => p.Cla)
                  .Include(p => p.TipoCriatura);
 
-            if (filtro != null && filtro.ToLower() != "todos")
+            if (!string.IsNullOrEmpty(filtro) && filtro.ToLower() != "todos")
             {
-                query = query.Where(p => p.FonteMidia.ToLower() == filtro.ToLower());
+                string filtroLower = filtro.ToLower();
+
+                if (filtroLower == "ambos")
+                {
+                    query = query.Where(p => p.LivroId.HasValue && p.FilmeId.HasValue);
+                }
+                else if (filtroLower == "livros")
+                {
+              
+                    query = query.Where(p => p.FonteMidia.ToLower() == "livros");
+                }
+                else if (filtroLower == "filme")
+                {
+                    query = query.Where(p => p.FonteMidia.ToLower() == "filme");
+                }
             }
 
             var personagens = query
@@ -96,7 +112,9 @@ namespace OLegado.Controllers
                     p.FonteMidia,
                     p.Habilidades,
                     p.Personalidade,
-                    p.NivelPoder
+                    p.NivelPoder,
+                    p.LivroId, 
+                    p.FilmeId
                 })
                 .ToList();
 
@@ -133,7 +151,7 @@ namespace OLegado.Controllers
             return Ok(personagem);
         }
 
-        // DELETE
+
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
